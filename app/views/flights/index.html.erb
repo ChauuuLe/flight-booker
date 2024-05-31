@@ -1,0 +1,43 @@
+<%= form_with url: flights_path, method: :get, local: true do %>
+  <div>
+    <%= label_tag :departure_airport_id, "Departure Airport" %>
+    <%= select_tag :departure_airport_id, options_from_collection_for_select(Airport.all, :id, :code, params[:departure_airport_id]), prompt: "Select Departure Airport" %>
+  </div>
+  
+  <div>
+    <%= label_tag :arrival_airport_id, "Arrival Airport" %>
+    <%= select_tag :arrival_airport_id, options_from_collection_for_select(Airport.all, :id, :code, params[:arrival_airport_id]), prompt: "Select Arrival Airport" %>
+  </div>
+  
+  <div>
+    <%= label_tag :num_passengers, "Number of Passengers" %>
+    <%= select_tag :num_passengers, options_for_select(1..4, params[:num_passengers]), prompt: "Select Number of Passengers" %>
+  </div>
+  
+  <div>
+    <%= label_tag :flight_date, "Flight Date" %>
+    <%= select_tag :flight_date, options_for_select(Flight.pluck(:start_datetime).map { |d| [d.strftime('%Y-%m-%d'), d.to_date] }.uniq, params[:flight_date]), prompt: "Select Flight Date" %>
+  </div>
+  
+  <div>
+    <%= submit_tag "Search Flights" %>
+  </div>
+<% end %>
+
+<% if @flights.present? %>
+  <h2>Available Flights</h2>
+  <%= form_with url: new_booking_path, method: :get, local: true do %>
+    <ul>
+      <% @flights.each do |flight| %>
+        <li>
+          <%= radio_button_tag :flight_id, flight.id %>
+          <%= flight.departure_airport.code %> to <%= flight.arrival_airport.code %> - <%= flight.start_datetime.strftime('%Y-%m-%d %H:%M') %> - Duration: <%= flight.duration / 60 %> hours
+        </li>
+      <% end %>
+    </ul>
+    <%= hidden_field_tag :num_passengers, @num_passengers %>
+    <%= submit_tag "Choose Flight" %>
+  <% end %>
+<% else %>
+  <p>No flights available for the selected criteria.</p>
+<% end %>

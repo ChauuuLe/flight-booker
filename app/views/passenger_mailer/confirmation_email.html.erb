@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Flight Booking Confirmation</h1>
+    <p>Hello, <%= @passenger.name %>!</p>
+    <p>Your flight to <%= @flight.arrival_airport_id %> is confirmed.</p>
+    <p>Flight details:</p>
+    <ul>
+      <li>Departure: <%= @flight.start_datetime %></li>
+      <li>Duration: <%= @flight.duration %></li>
+    </ul>
+    <p>Thank you for booking with us.</p>
+  </body>
+</html>
